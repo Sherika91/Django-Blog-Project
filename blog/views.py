@@ -3,6 +3,7 @@ from .models import Post
 
 
 def post_list(request):
+    """ List all published posts. """
     posts = Post.published.all()
     return render(request,
                   'blog/post/list.html',
@@ -10,6 +11,7 @@ def post_list(request):
 
 
 def post_detail(request, id):
+    """ Display a single post. """
     post = get_object_or_404(Post,
                              id=id,
                              status=Post.Status.PUBLISHED)
