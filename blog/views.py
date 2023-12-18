@@ -20,10 +20,10 @@ class PostListView(ListView):
         try:
             posts = paginator.page(page)
         except PageNotAnInteger:
-            # If page_number is not an integer deliver the first page
+            # If page is not an integer deliver the first page
             posts = paginator.page(1)
         except EmptyPage:
-            # If page_number is out of range deliver last page of results
+            # If page is out of range deliver last page of results
             posts = paginator.page(paginator.num_pages)
         return paginator, posts, posts.object_list, posts.has_other_pages()
 
