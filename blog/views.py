@@ -13,6 +13,17 @@ class PostListView(ListView):
     paginate_by = 3
     template_name = 'blog/post/list.html'
 
+    def paginate_queryset(self, queryset, page_size):
+        paginator = self.get_paginator(queryset, page_size)
+        page_kwarg = self.page_kwarg
+        page = self.request.GET.get(page_kwarg, 1)
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+        return paginator, posts, posts.object_list, posts.has_other_pages()
 
 # def post_list(request):
 #     """ List all published posts. """
