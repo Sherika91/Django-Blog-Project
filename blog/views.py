@@ -20,10 +20,13 @@ class PostListView(ListView):
         try:
             posts = paginator.page(page)
         except PageNotAnInteger:
+            # If page_number is not an integer deliver the first page
             posts = paginator.page(1)
         except EmptyPage:
+            # If page_number is out of range deliver last page of results
             posts = paginator.page(paginator.num_pages)
         return paginator, posts, posts.object_list, posts.has_other_pages()
+
 
 # def post_list(request):
 #     """ List all published posts. """
@@ -34,8 +37,10 @@ class PostListView(ListView):
 #     try:
 #         posts = paginator.page(page_number)
 #     except PageNotAnInteger:
+#         # If page_number is not an integer deliver the first page
 #         posts = paginator.page(1)
 #     except EmptyPage:
+#         # If page_number is out of range deliver last page of results
 #         posts = paginator.page(paginator.num_pages)
 #     return render(request,
 #                   'blog/post/list.html',
