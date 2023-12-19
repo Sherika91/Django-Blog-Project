@@ -66,6 +66,8 @@ def post_share(request, post_id):
     post = get_object_or_404(Post,
                              id=post_id,
                              status=Post.Status.PUBLISHED)
+    sent = False
+
     if request.method == 'POST':
         # Form was submitted for processing
         form = EmailPostForm(request.POST)
@@ -77,7 +79,7 @@ def post_share(request, post_id):
                 post.get_absolute_url())
             subject = f"{cd['name']} recommends you to read " \
                       f"{post.title}"
-            message = f"Read{post.title} at {post_url}\n\n" \
+            message = f"Read {post.title} at {post_url}\n\n" \
                       f"{cd['name']}\'s comments : {cd['comments']}"
             from_email = f"{cd['email']}"
             send_mail(subject, message, from_email,
