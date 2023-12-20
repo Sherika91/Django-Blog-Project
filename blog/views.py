@@ -96,7 +96,7 @@ def post_share(request, post_id):
 
 
 @require_POST
-def post_commnet(request, post_id):
+def post_comment(request, post_id):
     post = get_object_or_404(Post,
                              id=post_id,
                              status=Post.Status.PUBLISHED)
