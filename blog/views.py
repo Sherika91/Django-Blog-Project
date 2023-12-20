@@ -116,7 +116,7 @@ def post_comment(request, post_id):
         comment.post = post
         # Save the comment to the database
         comment.save()
-    return render(request, 'blog/post/comments.html',
+    return render(request, 'blog/post/comment.html',
                   {'post': post,
                    'form': form,
                    'comment': comment})
