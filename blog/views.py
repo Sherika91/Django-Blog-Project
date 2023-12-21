@@ -6,47 +6,53 @@ from django.views.generic import ListView
 from .forms import EmailPostForm, CommentForm
 from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from taggit.models import Tag
 
 
-class PostListView(ListView):
-    """ Alternatife for post_list but using classes """
-    queryset = Post.published.all()
-    context_object_name = 'posts'
-    paginate_by = 3
-    template_name = 'blog/post/list.html'
+# class PostListView(ListView):
+#     """ Alternatife for post_list but using classes """
+#     queryset = Post.published.all()
+#     context_object_name = 'posts'
+#     paginate_by = 3
+#     template_name = 'blog/post/list.html'
+#
+#     def paginate_queryset(self, queryset, page_size):
+#         paginator = self.get_paginator(queryset, page_size)
+#         page_kwarg = self.page_kwarg
+#         page = self.request.GET.get(page_kwarg, 1)
+#         try:
+#             posts = paginator.page(page)
+#         except PageNotAnInteger:
+#             # If page is not an integer deliver the first page
+#             posts = paginator.page(1)
+#         except EmptyPage:
+#             # If page is out of range deliver last page of results
+#             posts = paginator.page(paginator.num_pages)
+#         return paginator, posts, posts.object_list, posts.has_other_pages()
 
-    def paginate_queryset(self, queryset, page_size):
-        paginator = self.get_paginator(queryset, page_size)
-        page_kwarg = self.page_kwarg
-        page = self.request.GET.get(page_kwarg, 1)
-        try:
-            posts = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer deliver the first page
-            posts = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range deliver last page of results
-            posts = paginator.page(paginator.num_pages)
-        return paginator, posts, posts.object_list, posts.has_other_pages()
 
-
-# def post_list(request):
-#     """ List all published posts. """
-#     post_list = Post.published.all()
-#     # Pagination with 3 posts per page
-#     paginator = Paginator(post_list, 3)
-#     page_number = request.GET.get('page', 1)
-#     try:
-#         posts = paginator.page(page_number)
-#     except PageNotAnInteger:
-#         # If page_number is not an integer deliver the first page
-#         posts = paginator.page(1)
-#     except EmptyPage:
-#         # If page_number is out of range deliver last page of results
-#         posts = paginator.page(paginator.num_pages)
-#     return render(request,
-#                   'blog/post/list.html',
-#                   {'posts': posts})
+def post_list(request, tag_slug=None):
+    """ List all published posts. """
+    tag = None
+    post_list = Post.published.all()
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        post_list = post_list.filter(tags__in=[tag])
+    # Pagination with 3 posts per page
+    paginator = Paginator(post_list, 3)
+    page_number = request.GET.get('page', 1)
+    try:
+        posts = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page_number is not an integer deliver the first page
+        posts = paginator.page(1)
+    except EmptyPage:
+        # If page_number is out of range deliver last page of results
+        posts = paginator.page(paginator.num_pages)
+    return render(request,
+                  'blog/post/list.html',
+                  {'posts': posts,
+                   'tag': tag})
 
 
 def post_detail(request, year, month, day, post):
