@@ -35,12 +35,12 @@ from django.db.models import Count
 def post_list(request, tag_slug=None):
     """ List all published posts. """
     tag = None
-    post_list = Post.published.all()
+    postlist = Post.published.all()
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
-        post_list = post_list.filter(tags__in=[tag])
+        postlist = postlist.filter(tags__in=[tag])
     # Pagination with 3 posts per page
-    paginator = Paginator(post_list, 3)
+    paginator = Paginator(postlist, 3)
     page_number = request.GET.get('page', 1)
     try:
         posts = paginator.page(page_number)
