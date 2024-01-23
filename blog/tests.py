@@ -92,16 +92,6 @@ class BlogViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Post')
 
-    def test_blog_feed(self):
-        request = self.factory.get(reverse('blog:post_feed'))
-        request.user = self.user
-        response = post_list(request)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Test Post')
-        self.assertContains(response, 'Test Body')
-        self.assertContains(response, 'Test Tag')
-
 
 class FeedTestCase(TestCase):
     def setUp(self):
